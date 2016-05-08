@@ -1,0 +1,26 @@
+language: bash
+services: docker
+
+env:
+  - VARIANT=jessie
+  - VARIANT=wheezy
+  - VARIANT=xenial
+  - VARIANT=trusty
+  - VARIANT=precise
+
+install:
+  - git clone https://github.com/docker-library/official-images.git ~/official-images
+
+before_script:
+  - env | sort
+  - cd "$VARIANT"
+  - image="j24cape/perl-build:$VARIANT"
+
+script:
+  - docker build -t "$image" .
+  - ~/official-images/test/run.sh "$image"
+
+after_script:
+  - docker images
+
+# vim:set et ts=2 sw=2:
